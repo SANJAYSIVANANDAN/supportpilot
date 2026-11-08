@@ -1,0 +1,67 @@
+{
+  "realm": "support",
+  "enabled": true,
+  "roles": {
+    "realm": [
+      { "name": "agent", "description": "Support agent role" },
+      { "name": "admin", "description": "Admin role" }
+    ]
+  },
+  "clients": [
+    {
+      "clientId": "support-api",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": false,
+      "secret": "changeme",
+      "directAccessGrantsEnabled": true,
+      "standardFlowEnabled": false,
+      "serviceAccountsEnabled": false,
+      "defaultClientScopes": ["openid", "profile", "email"]
+    },
+    {
+      "clientId": "support-frontend",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": false,
+      "secret": "changeme-frontend",
+      "directAccessGrantsEnabled": true,
+      "standardFlowEnabled": true,
+      "redirectUris": ["*"],
+      "webOrigins": ["*"],
+      "defaultClientScopes": ["openid", "profile", "email"]
+    }
+  ],
+  "users": [
+    {
+      "username": "agent1",
+      "enabled": true,
+      "email": "agent1@example.com",
+      "firstName": "Support",
+      "lastName": "Agent",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "agent1pass",
+          "temporary": false
+        }
+      ],
+      "realmRoles": ["agent"]
+    },
+    {
+      "username": "admin1",
+      "enabled": true,
+      "email": "admin1@example.com",
+      "firstName": "Admin",
+      "lastName": "User",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "admin1pass",
+          "temporary": false
+        }
+      ],
+      "realmRoles": ["admin"]
+    }
+  ]
+}
