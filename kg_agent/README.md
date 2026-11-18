@@ -14,23 +14,51 @@ problem is **novel** and gets a new `Issue`/`Entity`/`Resolution` subgraph.
 The graph only grows on verified-unique cases. See
 [`explanation.md`](explanation.md) for the full architecture writeup.
 
-Standalone from the rest of `supportpilot` (no shared Postgres/Redis/LangGraph
-code), but reuses the same local Neo4j instance via new node labels.
+No Postgres/Redis/LangGraph dependency — Neo4j is its only data store.
 
 ## Setup
 
 ```powershell
 copy kg_agent\.env.example kg_agent\.env
-# edit kg_agent\.env with your OPENAI_API_KEY (Neo4j creds default to the
-# same local instance already used by the rest of supportpilot)
+# edit kg_agent\.env with your OPENAI_API_KEY
 
-# make sure Neo4j is running locally (see repo root README.md step 4)
+# make sure Neo4j is running locally (see repo root README.md step 3)
 
 .venv\Scripts\python -m kg_agent.seed                  # preload 3 canonical issues (with embeddings)
 .venv\Scripts\python -m kg_agent.backfill_embeddings    # no-op right after seed; needed for pre-upgrade Issues
 .venv\Scripts\python -m kg_agent.test_manual            # smoke test the hybrid pipeline
 .venv\Scripts\python -m kg_agent.eval.run_eval          # precision/recall/F1 against the labeled eval set
 .venv\Scripts\streamlit run kg_agent\dashboard.py
+```
+
+## Evaluation results
+
+`kg_agent/eval/run_eval.py` against the 12-row labeled set in
+`kg_agent/eval/eval_dataset.jsonl`, run on a freshly seeded graph
+(`python -m kg_agent.seed` right before `python -m kg_agent.eval.run_eval`,
+`OPENAI_MODEL=gpt-4o`, default thresholds):
+
+| Metric | Value |
+|---|---|
+| Precision (reuse decision) | 0.800 |
+| Recall (reuse decision) | 0.800 |
+| F1 | 0.800 |
+| True positives | 4 |
+| False positives (unsafe auto-reuse) | 1 |
+| True negatives | 6 |
+| False negatives (missed valid reuse) | 1 |
+
+"Positive" = the pipeline decided `SAME_ISSUE` (would auto-reuse without
+asking). These numbers are **graph-state-dependent** — re-running after
+interactive/dashboard use (which keeps adding Issues) will shift them, since
+more accumulated issues means more candidates to confuse a verification
+call. Reset to a clean baseline before comparing runs:
+
+```powershell
+# clears all OntoDesk nodes from Neo4j, then reseeds
+.venv\Scripts\python -c "from kg_agent import graph_store; graph_store.get_driver().session().run('MATCH (n) WHERE n:Issue OR n:Entity OR n:Category OR n:Resolution DETACH DELETE n')"
+.venv\Scripts\python -m kg_agent.seed
+.venv\Scripts\python -m kg_agent.eval.run_eval
 ```
 
 ## Calibrating thresholds
@@ -51,8 +79,7 @@ an unnecessary new Issue).
 ```
 
 Tools exposed: `ask_support(query)`, `graph_stats()`. Register with an MCP
-client (e.g. Claude Desktop) the same way as `app/mcp/server.py` in the repo
-root README:
+client (e.g. Claude Desktop):
 
 ```json
 {

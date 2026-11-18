@@ -8,9 +8,9 @@ answered instantly from the graph, with no write — so the knowledge base
 gets denser and more reusable over time instead of accumulating duplicate
 or near-duplicate noise.
 
-It lives in `kg_agent/`, is independent of the rest of the `supportpilot`
-repo (no shared Postgres/Redis/LangGraph code), and is exposed as a private
-MCP server so any MCP client (Claude Desktop, another agent, a support desk
+It lives in `kg_agent/`, has no dependency on any Postgres/Redis/LangGraph
+code, and is exposed as a private MCP server so any MCP client (Claude
+Desktop, another agent, a support desk
 tool) can call it directly.
 
 > **v2 note:** the first version of OntoDesk gated reuse purely on Jaccard
@@ -365,10 +365,9 @@ just-processed query on the very next render.
   `graph_store.create_issue` on the create-new branches, and only
   `bump_seen` runs on reuse. A hallucinated match id is explicitly
   rejected (§2 Step 5 guardrail) rather than trusted.
-- **One database, one package.** Unlike the rest of `supportpilot`
-  (Postgres + Redis + Neo4j + LangGraph), OntoDesk uses Neo4j as its only
-  store (now also as its vector index — no separate vector DB) and has no
-  dependency on the rest of the `app/` package.
+- **One database, one package.** OntoDesk uses Neo4j as its only store
+  (now also as its vector index — no separate vector DB) and has no
+  Postgres/Redis/LangGraph dependency at all.
 - **Resolutions are written to be reusable, not personalized**, and
   explicitly exclude customer-identifying facts (§1, `Resolution`).
 - **Thresholds are configurable, not hard-coded guesses** — `RRF_K`,

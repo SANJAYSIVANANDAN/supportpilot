@@ -25,7 +25,7 @@ copy kg_agent\.env.example kg_agent\.env
 
 # 3. Start a local Neo4j (Community Edition, requires JDK 17+)
 #    https://neo4j.com/deployment-center/
-.\bin\neo4j-admin.bat dbms set-initial-password supportpilot123   # first time only
+.\bin\neo4j-admin.bat dbms set-initial-password ontodesk123   # first time only
 .\bin\neo4j.bat console
 
 # 4. Seed the knowledge graph with a few canonical issues

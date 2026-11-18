@@ -427,8 +427,8 @@ Step 5 guardrail).
   `graph_store.generate_issue_embedding`, so swapping providers later
   never touches calling code.
 - **`config.py`** — loads `kg_agent/.env` first, then falls back to the
-  repo-root `.env` (reusing the Neo4j credentials already set up for the
-  rest of `supportpilot` rather than duplicating them). Exposes one frozen
+  repo-root `.env` (so a shared Neo4j/OpenAI config at the repo root
+  doesn't need to be duplicated into `kg_agent/.env`). Exposes one frozen
   `Settings` dataclass covering every tunable: `RRF_K`, `SEMANTIC_TOP_K`,
   `ENTITY_TOP_K`, `MIN_CANDIDATE_SCORE`, `NOVELTY_THRESHOLD`,
   `EMBEDDING_PROVIDER`/`EMBEDDING_MODEL`/`EMBEDDING_DIMENSIONS`,
@@ -490,8 +490,7 @@ including the real `create_vector_index()` idempotency check.
 ```powershell
 copy kg_agent\.env.example kg_agent\.env
 # edit kg_agent\.env with your OPENAI_API_KEY
-# (NEO4J_* defaults already point at the same local instance the rest
-#  of supportpilot uses)
+# (NEO4J_* defaults already point at a local Neo4j instance)
 
 # make sure a local Neo4j is running (bolt://localhost:7687)
 
