@@ -1,7 +1,7 @@
 # OntoDesk — Architecture
 
-One-page reference. For the full narrative see [`GUIDE.md`](GUIDE.md); for
-operational commands see [`README.md`](README.md).
+One-page reference. For setup and operational commands see the root
+[`README.md`](../README.md).
 
 ## System overview
 
@@ -15,7 +15,7 @@ flowchart LR
     MCP -- "stdio, ask_support(query)" --> Server[mcp_server.py]
     UI -- "handle_query(query)" --> Brain
 
-    Server --> Brain[brain.handle_query]
+    Server --> Brain[langgraph_flow.handle_query]
 
     Brain --> LLM[llm.py\nextract / verify / resolve]
     Brain --> Graph[graph_store.py]
@@ -25,8 +25,10 @@ flowchart LR
     Graph --> Neo4j[(Neo4j\nIssue / Entity / Category / Resolution\n+ vector index)]
 ```
 
-Everything funnels through **one function**, `brain.handle_query`, so the
-MCP server and the dashboard can never disagree on behavior.
+Everything funnels through **one function**, `langgraph_flow.handle_query`,
+which runs a compiled **LangGraph `StateGraph`** (the project's sole
+stateful-orchestration mechanism) — so the MCP server and the dashboard
+can never disagree on behavior.
 
 ## Graph schema (the ontology)
 
@@ -77,7 +79,7 @@ flowchart TD
 **The rule that matters:** the LLM never writes to Neo4j directly. It only
 returns a decision enum; `graph_store.bump_seen` and
 `graph_store.create_issue` are the only two write paths, called explicitly
-from `brain.py`'s branching. A verification result that names a candidate
+from `langgraph_flow.py`'s branching. A verification result that names a candidate
 id outside the ones it was shown is rejected and forced to
 `NEEDS_CLARIFICATION` before it can reach that branching at all.
 
@@ -86,7 +88,7 @@ id outside the ones it was shown is rejected and forced to
 ```mermaid
 sequenceDiagram
     participant C as Client (MCP/UI)
-    participant B as brain.py
+    participant B as langgraph_flow.py
     participant L as llm.py
     participant G as graph_store.py
     participant N as Neo4j
@@ -133,11 +135,11 @@ makes the final same/different/unsure call, because only it can read
 
 | File | Responsibility |
 |---|---|
-| `brain.py` | Orchestrates the flowchart above. The only thing that decides which branch runs. |
+| `langgraph_flow.py` | Orchestrates the flowchart above. The only thing that decides which branch runs. |
 | `llm.py` | `extract`, `verify_issue_match`, `resolve` — three structured-output calls. Never writes to Neo4j. |
 | `embeddings.py` | The one place that calls an embedding provider. |
 | `graph_store.py` | All Cypher. Retrieval functions only read; `bump_seen`/`create_issue` are the only writes. |
 | `ranking.py` | Pure Reciprocal Rank Fusion — no external calls, fully unit-testable. |
-| `mcp_server.py` / `dashboard.py` | Thin callers of `brain.handle_query`. |
+| `mcp_server.py` / `dashboard.py` | Thin callers of `langgraph_flow.handle_query`. |
 | `seed.py` / `backfill_embeddings.py` | Populate / migrate the graph. |
 | `eval/` | Labeled dataset + precision/recall/F1 harness for calibrating thresholds. |

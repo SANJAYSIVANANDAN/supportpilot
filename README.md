@@ -2,8 +2,11 @@
 
 A customer-support agent whose knowledge is a Neo4j ontology: it only
 grows the graph when it sees a genuinely new, LLM-verified kind of
-problem. See [`kg_agent/README.md`](kg_agent/README.md) for a terser setup/run
-reference.
+problem. Orchestration is a single [LangGraph](https://github.com/langchain-ai/langgraph)
+`StateGraph` (`kg_agent/langgraph_flow.py`) — the project's only
+stateful-orchestration mechanism, shared identically by the MCP server
+and the dashboard. See [`kg_agent/ARCHITECTURE.md`](kg_agent/ARCHITECTURE.md)
+for the full pipeline, graph schema, and decision logic, with diagrams.
 
 All the code lives in [`kg_agent/`](kg_agent/); this root `README.md`,
 `requirements.txt`, and `.env.example` just mirror its dependencies/config
@@ -57,4 +60,5 @@ MCP client's config (e.g. Claude Desktop):
 ```
 
 Tools: `ask_support(query)`, `graph_stats()`. See
-[`kg_agent/GUIDE.md`](kg_agent/GUIDE.md) §3.4 for what each returns.
+[`kg_agent/ARCHITECTURE.md`](kg_agent/ARCHITECTURE.md) for what each
+returns and how the answer is produced.

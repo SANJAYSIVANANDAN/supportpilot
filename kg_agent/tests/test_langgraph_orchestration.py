@@ -1,11 +1,12 @@
-"""Unit tests for brain.handle_query's branching logic. Every call that
-would hit Neo4j/OpenAI is monkeypatched to a fake, so these run with no
-external services and should always pass."""
+"""Unit tests for langgraph_flow.handle_query's branching logic (the
+LangGraph StateGraph wiring the project uses for all stateful
+orchestration). Every call that would hit Neo4j/OpenAI is monkeypatched to
+a fake, so these run with no external services and should always pass."""
 from __future__ import annotations
 
 import pytest
 
-from kg_agent import brain, graph_store, llm
+from kg_agent import graph_store, langgraph_flow, llm
 
 
 def _extraction(**overrides):
@@ -61,7 +62,7 @@ def test_same_issue_reuses_without_writing_new_node(monkeypatch):
         ),
     )
 
-    result = brain.handle_query("I got billed twice")
+    result = langgraph_flow.handle_query("I got billed twice")
 
     assert result["graph_updated"] is False
     assert result["is_novel"] is False
@@ -97,7 +98,7 @@ def test_new_issue_creates_node_when_no_candidates(monkeypatch):
         ),
     )
 
-    result = brain.handle_query("The analytics tab crashes")
+    result = langgraph_flow.handle_query("The analytics tab crashes")
 
     assert result["graph_updated"] is True
     assert result["is_novel"] is True
@@ -133,7 +134,7 @@ def test_related_but_different_creates_new_node(monkeypatch):
         ),
     )
 
-    result = brain.handle_query("Something related but different")
+    result = langgraph_flow.handle_query("Something related but different")
 
     assert result["graph_updated"] is True
     assert result["is_novel"] is True
@@ -159,7 +160,7 @@ def test_needs_clarification_does_not_touch_graph(monkeypatch):
         ),
     )
 
-    result = brain.handle_query("I was charged weirdly")
+    result = langgraph_flow.handle_query("I was charged weirdly")
 
     assert result["graph_updated"] is False
     assert result["is_novel"] is False

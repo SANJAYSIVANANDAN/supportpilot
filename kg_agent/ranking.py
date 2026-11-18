@@ -2,7 +2,7 @@
 
 Pure functions, no Neo4j/OpenAI/Streamlit imports, so they're trivially
 unit-testable (see kg_agent/tests/test_ranking.py) and reusable from both
-`brain.py` and `eval/run_eval.py`.
+`langgraph_flow.py` and `eval/run_eval.py`.
 """
 from __future__ import annotations
 

@@ -5,7 +5,7 @@ from __future__ import annotations
 
 import streamlit as st
 
-from kg_agent import brain, graph_store
+from kg_agent import graph_store, langgraph_flow
 
 st.set_page_config(page_title="OntoDesk", page_icon="🧠", layout="centered")
 
@@ -49,7 +49,7 @@ with tab_ask:
     query = st.text_area("Ask a support question", placeholder="e.g. My invoice shows the wrong tax amount")
     if st.button("Ask", type="primary") and query.strip():
         with st.spinner("Thinking..."):
-            result = brain.handle_query(query.strip())
+            result = langgraph_flow.handle_query(query.strip())
 
         st.session_state["last_result"] = result
         st.rerun()

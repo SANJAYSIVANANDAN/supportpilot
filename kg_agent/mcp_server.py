@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from mcp.server.fastmcp import FastMCP
 
-from kg_agent import brain, graph_store
+from kg_agent import graph_store, langgraph_flow
 
 mcp = FastMCP("ontodesk")
 
@@ -26,7 +26,7 @@ def ask_support(query: str) -> dict:
     answer, is_novel, graph_updated, matched_issue_id, semantic_score,
     entity_score, hybrid_rank, verification_decision, verification_reasoning,
     times_seen, entities, category, problem_summary."""
-    return brain.handle_query(query)
+    return langgraph_flow.handle_query(query)
 
 
 @mcp.tool()

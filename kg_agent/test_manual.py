@@ -11,7 +11,7 @@ from __future__ import annotations
 
 import json
 
-from kg_agent import brain, graph_store
+from kg_agent import graph_store, langgraph_flow
 
 SAMPLE_QUERIES = [
     "I got billed two times this month for the same plan",  # should match seeded billing issue
@@ -25,7 +25,7 @@ def run() -> None:
     print("Before:", before)
 
     for query in SAMPLE_QUERIES:
-        result = brain.handle_query(query)
+        result = langgraph_flow.handle_query(query)
         print(f"\nQuery: {query}")
         print(json.dumps({k: v for k, v in result.items() if k != "answer"}, indent=2))
         print("Answer:", str(result["answer"])[:200], "...")

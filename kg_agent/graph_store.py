@@ -13,7 +13,7 @@ An Issue is a *kind* of problem, not a raw log of every query: repeats of an
 existing kind bump times_seen on a confirmed match instead of creating a new
 node. Retrieval (find_semantically_similar_issues / find_entity_similar_issues)
 only ever ranks candidates - it never writes. The actual reuse-vs-create
-decision is made by LLM verification in brain.py; this module just supplies
+decision is made by LLM verification in langgraph_flow.py; this module just supplies
 and stores the candidates it's asked for.
 """
 from __future__ import annotations

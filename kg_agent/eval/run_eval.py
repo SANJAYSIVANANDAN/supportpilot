@@ -20,7 +20,7 @@ import json
 import sys
 from pathlib import Path
 
-from kg_agent import brain
+from kg_agent import langgraph_flow
 
 DEFAULT_DATASET = Path(__file__).parent / "eval_dataset.jsonl"
 
@@ -43,7 +43,7 @@ def run(path: Path = DEFAULT_DATASET) -> None:
     mismatches = []
 
     for row in rows:
-        result = brain.handle_query(row["query"])
+        result = langgraph_flow.handle_query(row["query"])
         predicted = result.get("verification_decision") or "NEW_ISSUE"  # None means no-candidates -> straight novel
         expected = row["expected_decision"]
 
