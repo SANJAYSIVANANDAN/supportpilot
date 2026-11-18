@@ -2,9 +2,7 @@
 
 A customer-support agent whose knowledge is a Neo4j ontology: it only
 grows the graph when it sees a genuinely new, LLM-verified kind of
-problem. See [`kg_agent/GUIDE.md`](kg_agent/GUIDE.md) for the full
-story — why it exists, how it works, and every design decision behind it
-— or [`kg_agent/README.md`](kg_agent/README.md) for a terser setup/run
+problem. See [`kg_agent/README.md`](kg_agent/README.md) for a terser setup/run
 reference.
 
 All the code lives in [`kg_agent/`](kg_agent/); this root `README.md`,
