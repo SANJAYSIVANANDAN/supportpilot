@@ -1,0 +1,12 @@
+{"query": "I got billed two times this month for the same plan", "expected_decision": "SAME_ISSUE", "notes": "paraphrase of seeded billing duplicate-charge issue"}
+{"query": "My card was charged twice for my subscription renewal", "expected_decision": "SAME_ISSUE", "notes": "paraphrase of seeded billing duplicate-charge issue"}
+{"query": "There are two identical charges on my latest invoice", "expected_decision": "SAME_ISSUE", "notes": "paraphrase, different wording, same intent"}
+{"query": "I reset my password but the site still says it's wrong", "expected_decision": "SAME_ISSUE", "notes": "paraphrase of seeded login/password-reset issue"}
+{"query": "My CSV export of the full year's data never finishes and times out", "expected_decision": "SAME_ISSUE", "notes": "paraphrase of seeded CSV export timeout issue"}
+{"query": "I want a refund for my duplicate charge, not just an explanation", "expected_decision": "RELATED_BUT_DIFFERENT", "notes": "shares billing/duplicate_charge entities but different intent (refund request vs explanation) and different resolution"}
+{"query": "I was charged the wrong amount for my subscription, not charged twice", "expected_decision": "RELATED_BUT_DIFFERENT", "notes": "same category/entities overlap but a genuinely different problem (wrong amount vs duplicate charge)"}
+{"query": "My password works fine but I can't enable two-factor authentication", "expected_decision": "RELATED_BUT_DIFFERENT", "notes": "shares login/authentication entities but different underlying problem than password reset"}
+{"query": "The mobile app crashes whenever I open the analytics tab", "expected_decision": "NEW_ISSUE", "notes": "unseen problem, unrelated category"}
+{"query": "Can you explain how your pricing tiers differ?", "expected_decision": "NEW_ISSUE", "notes": "unseen, general pre-sales question"}
+{"query": "It's broken again", "expected_decision": "NEEDS_CLARIFICATION", "notes": "ambiguous - no entities/context to determine which issue, if any"}
+{"query": "Same problem as before", "expected_decision": "NEEDS_CLARIFICATION", "notes": "ambiguous - references unspecified prior context"}

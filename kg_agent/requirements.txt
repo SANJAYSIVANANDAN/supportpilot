@@ -1,0 +1,5 @@
+neo4j>=5.19
+openai>=1.30
+mcp>=1.2
+streamlit>=1.35
+python-dotenv>=1.0

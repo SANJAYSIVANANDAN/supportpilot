@@ -1,4 +1,0 @@
-mcp[cli]==1.9.4
-sqlalchemy==2.0.41
-psycopg2-binary==2.9.13
-uvicorn[standard]==0.34.2
